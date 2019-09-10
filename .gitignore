@@ -102,3 +102,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+/object_detection_utils/string_int_label_map_pb2.py
