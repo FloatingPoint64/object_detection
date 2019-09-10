@@ -13,7 +13,9 @@ fi
 # Install dependencies
 sudo apt install unzip
 
+cd "../"
 protoc object_detection_utils/*.proto --python_out=.
+cd "${CURRENT_DIR}"
 
 #sudo apt install -y protobuf-compiler python-pil python-lxml python-pip python-dev git unzip
 #
