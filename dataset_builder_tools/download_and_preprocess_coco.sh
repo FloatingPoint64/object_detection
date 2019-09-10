@@ -13,8 +13,6 @@ fi
 # Install dependencies
 sudo apt install unzip
 
-protoc object_detection_utils/*.proto --python_out=.
-
 #sudo apt install -y protobuf-compiler python-pil python-lxml python-pip python-dev git unzip
 #
 #pip install Cython git+https://github.com/cocodataset/cocoapi#subdirectory=PythonAPI
@@ -36,6 +34,10 @@ SCRATCH_DIR="${OUTPUT_DIR}/raw-data"
 mkdir -p "${OUTPUT_DIR}"
 mkdir -p "${SCRATCH_DIR}"
 CURRENT_DIR=$(pwd)
+
+cd "/content/object_detection"
+protoc object_detection_utils/*.proto --python_out=.
+cd "${CURRENT_DIR}"
 
 # Helper function to download and unpack a .zip file.
 function download_and_unzip() {
