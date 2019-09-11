@@ -13,19 +13,6 @@ fi
 # Install dependencies
 sudo apt install unzip
 
-#sudo apt install -y protobuf-compiler python-pil python-lxml python-pip python-dev git unzip
-#
-#pip install Cython git+https://github.com/cocodataset/cocoapi#subdirectory=PythonAPI
-#
-#pip install --upgrade tensorflow
-#
-#echo "Cloning Tensorflow models directory (for conversion utilities)"
-#if [ ! -e tf-models ]; then
-#  git clone http://github.com/tensorflow/models tf-models
-#fi
-#
-#(cd tf-models/research && protoc object_detection/protos/*.proto --python_out=.)
-
 UNZIP="unzip -nq"
 
 # Create the output directories.
@@ -66,10 +53,6 @@ IMAGE_INFO_FILE="image_info_test2017.zip"
 download_and_unzip ${BASE_ANNOTATION_URL} ${IMAGE_INFO_FILE}
 UNLABELED_IMAGE_INFO_FILE="image_info_unlabeled2017.zip"
 download_and_unzip ${BASE_ANNOTATION_URL} ${UNLABELED_IMAGE_INFO_FILE}
-
-# Setup packages
-#touch tf-models/__init__.py
-#touch tf-models/research/__init__.py
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 BASE_IMAGE_URL="http://images.cocodataset.org/zips"
@@ -128,7 +111,7 @@ function create_unlabeled_dataset() {
     --num_shards=256
 }
 
-#create_dataset "train"
+create_dataset "train"
 create_dataset "val"
-#create_testdev_and_test_dataset
-#create_unlabeled_dataset
+create_testdev_and_test_dataset
+create_unlabeled_dataset
