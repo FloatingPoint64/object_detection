@@ -6,6 +6,7 @@ import multiprocessing
 from PIL import Image
 import io
 import hashlib
+from tqdm import tqdm
 
 import tensorflow as tf
 
@@ -172,24 +173,29 @@ def _create_tf_record_from_coco_annotations(images_info_file: str,
 
     pool = multiprocessing.Pool()
     total_num_annotations_skipped = 0
-    for idx, (_, tf_example, num_annotations_skipped) in enumerate(
-        pool.imap(
-            _pool_create_tf_example,
-            [
-                (
-                    image,
-                    image_dir,
-                    _get_object_annotation(image["id"]),
-                    category_index,
-                ) for image in images
-            ]
-        )
-    ):
-        if idx % 100 == 0:
-            tf.logging.info(f"On image {idx} of {len(images)}.")
 
-        total_num_annotations_skipped += num_annotations_skipped
-        writers[idx % num_shards].write(tf_example.SerializeToString())
+    with tqdm(total=len(images)) as pbar:
+        prev_idx = 0
+        for idx, (_, tf_example, num_annotations_skipped) in enumerate(
+            pool.imap(
+                _pool_create_tf_example,
+                [
+                    (
+                        image,
+                        image_dir,
+                        _get_object_annotation(image["id"]),
+                        category_index,
+                    ) for image in images
+                ]
+            )
+        ):
+            # if idx % 100 == 0:
+            #     tf.logging.info(f"On image {idx} of {len(images)}.")
+            pbar.update(idx - prev_idx)
+            prev_idx = idx
+
+            total_num_annotations_skipped += num_annotations_skipped
+            writers[idx % num_shards].write(tf_example.SerializeToString())
 
     pool.close()
     pool.join()

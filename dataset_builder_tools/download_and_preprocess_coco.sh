@@ -12,6 +12,7 @@ fi
 
 # Install dependencies
 sudo apt install unzip
+pip install tqdm
 
 UNZIP="unzip -nq"
 
